@@ -10,5 +10,6 @@ public class TaskService {
 public String  generateTaskNumber(){
     return "TASK-"+ UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 }
+public static final String TASK_TITLE_REQUIRED= "TASK_TITLE_REQUIRED";
 
 }
