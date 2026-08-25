@@ -3,6 +3,8 @@ import com.cl.demo.entities.Task;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,6 +37,23 @@ public class TaskUpdateResponse {
         return taskUpdateResponse;
 
 }
+    public static List<TaskUpdateResponse> convert(
+            List<Task> taskList
+    ) {
 
+        List<TaskUpdateResponse> responseList =
+                new ArrayList<>();
+
+        for (Task task : taskList) {
+
+            TaskUpdateResponse response = convert(task);
+
+            if (response != null) {
+                responseList.add(response);
+            }
+        }
+
+        return responseList;
+    }
 
 }
