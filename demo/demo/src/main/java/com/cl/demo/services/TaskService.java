@@ -12,4 +12,8 @@ public String  generateTaskNumber(){
 }
 public static final String TASK_TITLE_REQUIRED= "TASK_TITLE_REQUIRED";
 
+public String  generateTaskTitle(){
+    return "TASK-"+ UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+
+}
 }
