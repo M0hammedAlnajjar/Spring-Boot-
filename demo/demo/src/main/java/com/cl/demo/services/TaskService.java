@@ -2,10 +2,12 @@ package com.cl.demo.services;
 
 import org.springframework.stereotype.Service;
 import com.cl.demo.requestobjects.TaskCreateRequest;
+import com.cl.demo.entities.Task;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Date;
 
 @Service
 public class TaskService {
@@ -31,6 +33,13 @@ public class TaskService {
             response.put("error", TASK_TITLE_REQUIRED);
             return response;
         }
+        Task task = new Task();
+
+        task.setId(UUID.randomUUID());
+        task.setIsActive(Boolean.TRUE);
+        task.setCreatedDate(new Date());
+        task.setTaskNumber(generateTaskNumber());
+
         return response;
 
     }
