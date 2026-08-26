@@ -1,7 +1,10 @@
 package com.cl.demo.services;
 
 import org.springframework.stereotype.Service;
+import com.cl.demo.requestobjects.TaskCreateRequest;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -20,5 +23,10 @@ public class TaskService {
                 .toString()
                 .substring(0, 8)
                 .toUpperCase();
+    }
+
+    public Map<String, String> addTask(TaskCreateRequest taskCreateRequest) {
+        Map<String, String> response = new HashMap<>();
+    return response ;
     }
 }
