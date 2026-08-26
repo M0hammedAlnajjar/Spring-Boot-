@@ -27,6 +27,13 @@ public class TaskService {
 
     public Map<String, String> addTask(TaskCreateRequest taskCreateRequest) {
         Map<String, String> response = new HashMap<>();
-    return response ;
+        if (taskCreateRequest == null || taskCreateRequest.getTitle() == null || taskCreateRequest.getTitle().isBlank()) {
+            response.put("error", TASK_TITLE_REQUIRED);
+            return response;
+        }
+        return response;
+
     }
+
 }
+
