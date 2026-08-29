@@ -1,5 +1,5 @@
 package com.cl.demo.requestobjects;
-import com.cl.demo.entities.Task;
+
 import com.cl.demo.entities.TaskStatus;
 import lombok.Getter;
 import lombok.Setter;
