@@ -12,6 +12,7 @@ import java.util.List;
 import com.cl.demo.requestobjects.TaskUpdateRequest;
 import com.cl.demo.responseobjects.TaskUpdateResponse;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.Map;
 @RestController
@@ -50,5 +51,12 @@ public class TaskController {
     ) {
 
         return taskService.updateTask(taskUpdateRequest);
+    }
+    @DeleteMapping("/deleteById")
+    public Map<String, String> deleteTaskById(
+            @RequestParam String uuid
+    ) {
+
+        return taskService.deleteTaskById(uuid);
     }
 }
