@@ -23,6 +23,12 @@ public class TaskService {
     public static final String TASK_TITLE_REQUIRED =
             "Task title is required";
 
+    public static final String TASK_DELETED =
+            "Task deleted";
+
+    public static final String TASK_NOT_FOUND =
+            "Task not found";
+
     public String generateTaskNumber() {
 
         return "TASK-"
@@ -157,5 +163,37 @@ public class TaskService {
         }
 
         return TaskUpdateResponse.convert(existingTask);
+    }
+
+    public Map<String, String> deleteTaskById(String uuid) {
+
+        Map<String, String> response = new HashMap<>();
+
+        if (uuid == null || uuid.isBlank()) {
+            response.put("error", TASK_NOT_FOUND);
+            return response;
+        }
+
+        Task taskToDelete = null;
+
+        for (Task task : DemoApplication.Task_List) {
+
+            if (task.getId() != null
+                    && task.getId().toString().equals(uuid)) {
+
+                taskToDelete = task;
+                break;
+            }
+        }
+
+        if (taskToDelete == null) {
+            response.put("error", TASK_NOT_FOUND);
+            return response;
+        }
+
+        DemoApplication.Task_List.remove(taskToDelete);
+        response.put("response", TASK_DELETED);
+
+        return response;
     }
 }
