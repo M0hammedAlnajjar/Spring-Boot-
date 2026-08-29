@@ -3,6 +3,7 @@ package com.cl.demo.services;
 import org.springframework.stereotype.Service;
 import com.cl.demo.requestobjects.TaskCreateRequest;
 import com.cl.demo.entities.Task;
+import com.cl.demo.DemoApplication;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,10 @@ public class TaskService {
         task.setStartDate(taskCreateRequest.getStartDate());
         task.setTaskStatus(taskCreateRequest.getTaskStatus());
         task.setIsAssigned(taskCreateRequest.getIsAssigned());
+
+        if (DemoApplication.Task_List.add(task)) {
+            response.put("response", TASK_SAVED);
+        }
 
         return response;
 
