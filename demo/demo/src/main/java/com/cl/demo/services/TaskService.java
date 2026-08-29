@@ -40,7 +40,15 @@ public class TaskService {
         task.setCreatedDate(new Date());
         task.setTaskNumber(generateTaskNumber());
 
+        task.setTitle(taskCreateRequest.getTitle());
+        task.setDescription(taskCreateRequest.getDescription());
+        task.setDueDate(taskCreateRequest.getDueDate());
+        task.setStartDate(taskCreateRequest.getStartDate());
+        task.setTaskStatus(taskCreateRequest.getTaskStatus());
+        task.setIsAssigned(taskCreateRequest.getIsAssigned());
+
         return response;
+
 
     }
 
