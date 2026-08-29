@@ -98,6 +98,23 @@ public class TaskService {
             return null;
         }
 
+        Task existingTask = null;
+
+        for (Task task : DemoApplication.Task_List) {
+
+            if (task.getId() != null
+                    && task.getId().toString()
+                    .equals(taskUpdateRequest.getTaskId())) {
+
+                existingTask = task;
+                break;
+            }
+        }
+
+        if (existingTask == null) {
+            return null;
+        }
+
         return null;
     }
 }
