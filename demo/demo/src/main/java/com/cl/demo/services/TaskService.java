@@ -6,6 +6,8 @@ import com.cl.demo.requestobjects.TaskCreateRequest;
 import com.cl.demo.responseobjects.TaskCreateResponse;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.cl.demo.requestobjects.TaskUpdateRequest;
+import com.cl.demo.responseobjects.TaskUpdateResponse;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -87,5 +89,15 @@ public class TaskService {
         return TaskCreateResponse.convert(
                 DemoApplication.Task_List
         );
+    }
+    public TaskUpdateResponse updateTask(
+            TaskUpdateRequest taskUpdateRequest
+    ) {
+
+        if (taskUpdateRequest == null) {
+            return null;
+        }
+
+        return null;
     }
 }
