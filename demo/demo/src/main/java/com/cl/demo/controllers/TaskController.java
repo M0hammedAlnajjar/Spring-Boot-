@@ -9,6 +9,9 @@ import com.cl.demo.responseobjects.TaskCreateResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
+import com.cl.demo.requestobjects.TaskUpdateRequest;
+import com.cl.demo.responseobjects.TaskUpdateResponse;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.Map;
 @RestController
@@ -41,5 +44,11 @@ public class TaskController {
 
         return taskService.getAllTasks();
     }
+    @PutMapping("/update")
+    public TaskUpdateResponse updateTask(
+            @RequestBody TaskUpdateRequest taskUpdateRequest
+    ) {
 
+        return taskService.updateTask(taskUpdateRequest);
+    }
 }
