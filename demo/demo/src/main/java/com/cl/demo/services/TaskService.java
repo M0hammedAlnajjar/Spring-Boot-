@@ -94,7 +94,10 @@ public class TaskService {
             TaskUpdateRequest taskUpdateRequest
     ) {
 
-        if (taskUpdateRequest == null) {
+        if (taskUpdateRequest == null
+                || taskUpdateRequest.getUuid() == null
+                || taskUpdateRequest.getUuid().isBlank()) {
+
             return null;
         }
 
@@ -104,7 +107,7 @@ public class TaskService {
 
             if (task.getId() != null
                     && task.getId().toString()
-                    .equals(taskUpdateRequest.getTaskId())) {
+                    .equals(taskUpdateRequest.getUuid())) {
 
                 existingTask = task;
                 break;
@@ -115,6 +118,44 @@ public class TaskService {
             return null;
         }
 
-        return null;
+        if (taskUpdateRequest.getTitleToUpdate() != null
+                && !taskUpdateRequest
+                .getTitleToUpdate()
+                .isBlank()) {
+
+            existingTask.setTitle(
+                    taskUpdateRequest.getTitleToUpdate()
+            );
+        }
+
+        if (taskUpdateRequest.getDescriptionToUpdate() != null) {
+
+            existingTask.setDescription(
+                    taskUpdateRequest.getDescriptionToUpdate()
+            );
+        }
+
+        if (taskUpdateRequest.getDueDateToUpdate() != null) {
+
+            existingTask.setDueDate(
+                    taskUpdateRequest.getDueDateToUpdate()
+            );
+        }
+
+        if (taskUpdateRequest.getTaskStatusToUpdate() != null) {
+
+            existingTask.setTaskStatus(
+                    taskUpdateRequest.getTaskStatusToUpdate()
+            );
+        }
+
+        if (taskUpdateRequest.getIsAssignedToUpdate() != null) {
+
+            existingTask.setIsAssigned(
+                    taskUpdateRequest.getIsAssignedToUpdate()
+            );
+        }
+
+        return TaskUpdateResponse.convert(existingTask);
     }
 }
