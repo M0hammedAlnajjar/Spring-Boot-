@@ -1,14 +1,15 @@
 package com.cl.demo.services;
 
-import org.springframework.stereotype.Service;
-import com.cl.demo.requestobjects.TaskCreateRequest;
-import com.cl.demo.entities.Task;
 import com.cl.demo.DemoApplication;
+import com.cl.demo.entities.Task;
+import com.cl.demo.requestobjects.TaskCreateRequest;
+import com.cl.demo.responseobjects.TaskCreateResponse;
+import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Date;
 
 @Service
 public class TaskService {
@@ -28,12 +29,20 @@ public class TaskService {
                 .toUpperCase();
     }
 
-    public Map<String, String> addTask(TaskCreateRequest taskCreateRequest) {
+    public Map<String, String> addTask(
+            TaskCreateRequest taskCreateRequest
+    ) {
+
         Map<String, String> response = new HashMap<>();
-        if (taskCreateRequest == null || taskCreateRequest.getTitle() == null || taskCreateRequest.getTitle().isBlank()) {
+
+        if (taskCreateRequest == null
+                || taskCreateRequest.getTitle() == null
+                || taskCreateRequest.getTitle().isBlank()) {
+
             response.put("error", TASK_TITLE_REQUIRED);
             return response;
         }
+
         Task task = new Task();
 
         task.setId(UUID.randomUUID());
@@ -53,9 +62,23 @@ public class TaskService {
         }
 
         return response;
-
-
     }
 
-}
+    public TaskCreateResponse getTaskById(String uuid) {
 
+        if (uuid == null || uuid.isBlank()) {
+            return null;
+        }
+
+        for (Task task : DemoApplication.Task_List) {
+
+            if (task.getId() != null
+                    && task.getId().toString().equals(uuid)) {
+
+                return TaskCreateResponse.convert(task);
+            }
+        }
+
+        return null;
+    }
+}
