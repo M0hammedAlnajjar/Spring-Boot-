@@ -4,6 +4,8 @@ import com.cl.demo.DemoApplication;
 import com.cl.demo.entities.PhoneNumber;
 import com.cl.demo.requestobjects.PhoneNumberCreateRequest;
 import org.springframework.stereotype.Service;
+import com.cl.demo.requestobjects.PhoneNumberUpdateRequest;
+import com.cl.demo.utils.HelperUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,6 +95,46 @@ public class PhoneNumberService {
         }
 
         return activePhoneNumbers;
+    }
+    public PhoneNumber updatePhoneNumber(
+            PhoneNumberUpdateRequest request
+    ) {
+
+        if (request == null
+                || request.getUuid() == null
+                || request.getUuid().isBlank()) {
+
+            return new PhoneNumber();
+        }
+
+        PhoneNumber existingPhoneNumber =
+                getPhoneNumberById(
+                        request.getUuid()
+                );
+
+        if (existingPhoneNumber.getId() == null) {
+            return existingPhoneNumber;
+        }
+
+        existingPhoneNumber.setCountryCode(
+                HelperUtils.compare(
+                        existingPhoneNumber.getCountryCode(),
+                        request.getCountryCodeToUpdate()
+                )
+        );
+
+        existingPhoneNumber.setPhoneNumber(
+                HelperUtils.compare(
+                        existingPhoneNumber.getPhoneNumber(),
+                        request.getPhoneNumberToUpdate()
+                )
+        );
+
+        existingPhoneNumber.setUpdatedDate(
+                new Date()
+        );
+
+        return existingPhoneNumber;
     }
 
 }
