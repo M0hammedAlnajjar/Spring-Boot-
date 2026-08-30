@@ -49,5 +49,28 @@ public class PhoneNumberService {
 
         return phoneNumber;
     }
+    public PhoneNumber getPhoneNumberById(String uuid) {
+
+        if (uuid == null || uuid.isBlank()) {
+            return new PhoneNumber();
+        }
+
+        for (PhoneNumber phoneNumber
+                : DemoApplication.PhoneNumber_List) {
+
+            if (phoneNumber.getId() != null
+                    && phoneNumber.getId()
+                    .toString()
+                    .equals(uuid)
+                    && Boolean.TRUE.equals(
+                    phoneNumber.getIsActive()
+            )) {
+
+                return phoneNumber;
+            }
+        }
+
+        return new PhoneNumber();
+    }
 
 }
