@@ -5,7 +5,9 @@ import com.cl.demo.entities.PhoneNumber;
 import com.cl.demo.requestobjects.PhoneNumberCreateRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -71,6 +73,26 @@ public class PhoneNumberService {
         }
 
         return new PhoneNumber();
+    }
+    public List<PhoneNumber> getAllPhoneNumbers() {
+
+        List<PhoneNumber> activePhoneNumbers =
+                new ArrayList<>();
+
+        for (PhoneNumber phoneNumber
+                : DemoApplication.PhoneNumber_List) {
+
+            if (Boolean.TRUE.equals(
+                    phoneNumber.getIsActive()
+            )) {
+
+                activePhoneNumbers.add(
+                        phoneNumber
+                );
+            }
+        }
+
+        return activePhoneNumbers;
     }
 
 }
