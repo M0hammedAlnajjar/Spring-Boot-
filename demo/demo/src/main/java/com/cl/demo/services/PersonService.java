@@ -2,125 +2,360 @@ package com.cl.demo.services;
 
 import com.cl.demo.DemoApplication;
 import com.cl.demo.entities.Person;
+import com.cl.demo.entities.PhoneNumber;
 import com.cl.demo.entities.UserName;
 import com.cl.demo.requestobjects.PersonCreateRequest;
 import com.cl.demo.requestobjects.PersonUpdateRequest;
+import com.cl.demo.requestobjects.PhoneNumberCreateRequest;
 import com.cl.demo.utils.HelperUtils;
-import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class PersonService {
 
-    public static final String PERSON_USERNAME_OR_EMAIL_ALREADY_TAKEN = "Given username or email is already taken";
-    public static final String PERSON_SAVED = "Person saved";
+    public static final String PERSON_USERNAME_OR_EMAIL_ALREADY_TAKEN =
+            "Given username or email is already taken";
 
-    public Map<String, String> addPerson(PersonCreateRequest requestObj) {
+    public static final String PERSON_SAVED =
+            "Person saved";
 
-        Map<String, String> response = new HashMap<>();
-        Person person = new Person();
+    @Autowired
+    private PhoneNumberService phoneNumberService;
 
-        if (!verifyUserNameAndEmail(requestObj.getPersonUserName(), requestObj.getPersonEmail())) {
-            response.put("error", PERSON_USERNAME_OR_EMAIL_ALREADY_TAKEN);
+
+    // =========================
+    // ADD PERSON
+    // =========================
+
+    public Map<String, String> addPerson(
+            PersonCreateRequest requestObj
+    ) {
+
+        Map<String, String> response =
+                new HashMap<>();
+
+        Person person =
+                new Person();
+
+        if (!verifyUserNameAndEmail(
+                requestObj.getPersonUserName(),
+                requestObj.getPersonEmail()
+        )) {
+
+            response.put(
+                    "error",
+                    PERSON_USERNAME_OR_EMAIL_ALREADY_TAKEN
+            );
+
             return response;
         }
 
-        person.setId(UUID.randomUUID());
-        person.setIsActive(Boolean.TRUE);
-        person.setCreatedDate(new Date());
+        // BaseClass information
+        person.setId(
+                UUID.randomUUID()
+        );
 
-        UserName userName = new UserName();
-        userName.setActiveUserName(requestObj.getPersonUserName());
+        person.setIsActive(
+                Boolean.TRUE
+        );
 
-        person.setUserName(userName);
-        person.setName(getFullName(requestObj));
-        person.setEmail(requestObj.getPersonEmail());
+        person.setCreatedDate(
+                new Date()
+        );
 
-        //TODO: Add Phone Number Logic in PhoneNumber Service
-        Boolean result = DemoApplication.Person_List.add(person);
+
+        // =========================
+        // USERNAME
+        // =========================
+
+        UserName userName =
+                new UserName();
+
+        userName.setActiveUserName(
+                requestObj.getPersonUserName()
+        );
+
+        person.setUserName(
+                userName
+        );
+
+
+        // =========================
+        // PERSON INFORMATION
+        // =========================
+
+        person.setName(
+                getFullName(requestObj)
+        );
+
+        person.setEmail(
+                requestObj.getPersonEmail()
+        );
+
+
+        // =========================
+        // PHONE NUMBER
+        // =========================
+
+        PhoneNumberCreateRequest phoneNumberRequest =
+                new PhoneNumberCreateRequest();
+
+        phoneNumberRequest.setCountryCode(
+                requestObj.getPersonCountryCode()
+        );
+
+        phoneNumberRequest.setPhoneNumber(
+                requestObj.getPersonPhoneNumber()
+        );
+
+        PhoneNumber phoneNumber =
+                phoneNumberService.addPhoneNumber(
+                        phoneNumberRequest
+                );
+
+        person.setPhoneNumber(
+                phoneNumber
+        );
+
+
+        // =========================
+        // SAVE PERSON
+        // =========================
+
+        Boolean result =
+                DemoApplication.Person_List.add(
+                        person
+                );
 
         if (result) {
-            response.put("response", PERSON_SAVED);
+
+            response.put(
+                    "response",
+                    PERSON_SAVED
+            );
         }
+
         return response;
     }
 
+
+    // =========================
+    // GET PERSON BY ID
+    // =========================
+
     public Person getPersonById(String uuid) {
-        for (Person p : DemoApplication.Person_List) {
-            if (p.getId().toString().equals(uuid) && p.getIsActive() != false) {
-                return p;
+
+        for (Person person
+                : DemoApplication.Person_List) {
+
+            if (person.getId() != null
+                    && person.getId()
+                    .toString()
+                    .equals(uuid)
+                    && Boolean.TRUE.equals(
+                    person.getIsActive()
+            )) {
+
+                return person;
             }
         }
+
         return new Person();
     }
 
-    public Person updatePerson(PersonUpdateRequest updateObj) {
-        Person person = getPersonById(updateObj.getUuid());
-        if (person == null || person.getId() == null || !person.getIsActive()) {
+
+    // =========================
+    // UPDATE PERSON
+    // =========================
+
+    public Person updatePerson(
+            PersonUpdateRequest updateObj
+    ) {
+
+        Person person =
+                getPersonById(
+                        updateObj.getUuid()
+                );
+
+        if (person == null
+                || person.getId() == null
+                || !Boolean.TRUE.equals(
+                person.getIsActive()
+        )) {
+
             return person;
         }
-        DemoApplication.Person_List.remove(person);
 
-        person.setUserName(getUserNameByCompare(person.getUserName(), updateObj));
-        person.setEmail(HelperUtils.compare(person.getEmail(), updateObj.getEmailToUpdate()));
+        DemoApplication.Person_List.remove(
+                person
+        );
 
-        DemoApplication.Person_List.add(person);
+        person.setUserName(
+                getUserNameByCompare(
+                        person.getUserName(),
+                        updateObj
+                )
+        );
+
+        person.setEmail(
+                HelperUtils.compare(
+                        person.getEmail(),
+                        updateObj.getEmailToUpdate()
+                )
+        );
+
+        person.setUpdatedDate(
+                new Date()
+        );
+
+        DemoApplication.Person_List.add(
+                person
+        );
+
         return person;
     }
 
+
+    // =========================
+    // GET ALL PERSONS
+    // =========================
+
     public List<Person> getAllPersons() {
-        List<Person> resultList = new ArrayList<>();
-        for (Person p : DemoApplication.Person_List) {
-            if (p.getIsActive()) {
-                resultList.add(p);
+
+        List<Person> resultList =
+                new ArrayList<>();
+
+        for (Person person
+                : DemoApplication.Person_List) {
+
+            if (Boolean.TRUE.equals(
+                    person.getIsActive()
+            )) {
+
+                resultList.add(
+                        person
+                );
             }
         }
+
         return resultList;
     }
 
-    public Boolean verifyUserNameAndEmail(String userName, String email) {
-        if (!DemoApplication.emails.add(email) || !DemoApplication.userNames.add(userName)) {
+
+    // =========================
+    // VERIFY USERNAME AND EMAIL
+    // =========================
+
+    public Boolean verifyUserNameAndEmail(
+            String userName,
+            String email
+    ) {
+
+        if (!DemoApplication.emails.add(email)
+                || !DemoApplication.userNames.add(userName)) {
+
             return false;
         }
+
         return true;
     }
 
-    public String getFullName(PersonCreateRequest request) {
-        return request.getPersonFirstName() + " " +
-                request.getPersonMiddleName() + " " +
-                request.getPersonLastName();
+
+    // =========================
+    // GET FULL NAME
+    // =========================
+
+    public String getFullName(
+            PersonCreateRequest request
+    ) {
+
+        return request.getPersonFirstName()
+                + " "
+                + request.getPersonMiddleName()
+                + " "
+                + request.getPersonLastName();
     }
 
-    private UserName getUserNameByCompare(UserName currentUserNameObj, PersonUpdateRequest updateRequest) {
-        String userNameToUpdate = HelperUtils.compare(currentUserNameObj.getActiveUserName(),
-                updateRequest.getUserNameToUpdate());
-        UserName userName = new UserName();
-        if (DemoApplication.userNames.add(userNameToUpdate) == true) {
 
-            List<String> userNameHistory = currentUserNameObj.getPrevUserNames();
+    // =========================
+    // UPDATE USERNAME
+    // =========================
+
+    private UserName getUserNameByCompare(
+            UserName currentUserNameObj,
+            PersonUpdateRequest updateRequest
+    ) {
+
+        String userNameToUpdate =
+                HelperUtils.compare(
+                        currentUserNameObj.getActiveUserName(),
+                        updateRequest.getUserNameToUpdate()
+                );
+
+        if (DemoApplication.userNames.add(
+                userNameToUpdate
+        )) {
+
+            List<String> userNameHistory =
+                    currentUserNameObj.getPrevUserNames();
+
             if (userNameHistory == null) {
-                userNameHistory = new ArrayList<>();
-            }
-            userNameHistory.add(currentUserNameObj.getActiveUserName());
 
-            currentUserNameObj.setPrevUserNames(userNameHistory);
-            currentUserNameObj.setActiveUserName(updateRequest.getUserNameToUpdate());
+                userNameHistory =
+                        new ArrayList<>();
+            }
+
+            userNameHistory.add(
+                    currentUserNameObj.getActiveUserName()
+            );
+
+            currentUserNameObj.setPrevUserNames(
+                    userNameHistory
+            );
+
+            currentUserNameObj.setActiveUserName(
+                    userNameToUpdate
+            );
         }
 
         return currentUserNameObj;
     }
 
+
+    // =========================
+    // DELETE PERSON
+    // =========================
+
     public Boolean deleteById(String uuid) {
-        Person person = getPersonById(uuid);
-        if (person == null || person.getId() == null || person.getIsActive() != true) {
+
+        Person person =
+                getPersonById(uuid);
+
+        if (person == null
+                || person.getId() == null
+                || !Boolean.TRUE.equals(
+                person.getIsActive()
+        )) {
+
             return false;
-        } else {
-            DemoApplication.Person_List.remove(person);
-            person.setIsActive(false);
-            DemoApplication.Person_List.add(person);
-            return true;
         }
+
+        person.setIsActive(
+                Boolean.FALSE
+        );
+
+        person.setUpdatedDate(
+                new Date()
+        );
+
+        return true;
     }
 }
