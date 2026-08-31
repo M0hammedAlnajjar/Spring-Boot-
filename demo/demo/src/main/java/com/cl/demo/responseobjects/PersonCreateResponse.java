@@ -17,12 +17,35 @@ public class PersonCreateResponse {
     String phoneNumber;
 
     public static PersonCreateResponse convert(Person person) {
-        PersonCreateResponse response = new PersonCreateResponse();
-        response.setPersonId(person.getId().toString());
-        response.setFullName(person.getName());
-        response.setUserName(person.getUserName().getActiveUserName());
-        response.setEmail(person.getEmail());
-        //response.setPhoneNumber(person.getPhoneNumber().toString());
+
+        PersonCreateResponse response =
+                new PersonCreateResponse();
+
+        response.setPersonId(
+                person.getId().toString()
+        );
+
+        response.setFullName(
+                person.getName()
+        );
+
+        response.setUserName(
+                person.getUserName().getActiveUserName()
+        );
+
+        response.setEmail(
+                person.getEmail()
+        );
+
+        if (person.getPhoneNumber() != null) {
+
+            response.setPhoneNumber(
+                    person.getPhoneNumber().getCountryCode()
+                            + " "
+                            + person.getPhoneNumber().getPhoneNumber()
+            );
+        }
+
         return response;
     }
 
