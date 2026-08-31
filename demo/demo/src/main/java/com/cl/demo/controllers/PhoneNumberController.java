@@ -22,6 +22,9 @@ import com.cl.demo.requestobjects.PhoneNumberUpdateRequest;
 import com.cl.demo.responseobjects.PhoneNumberUpdateResponse;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @RestController
 @RequestMapping("phoneNumber")
 
@@ -76,5 +79,13 @@ public class PhoneNumberController {
         return PhoneNumberUpdateResponse.convert(
                 phoneNumber
         );
+    }
+
+    @DeleteMapping("/deleteById")
+    public Boolean deletePhoneNumberById(
+            @RequestParam String id
+    ) {
+
+        return phoneNumberService.deleteById(id);
     }
 }
