@@ -9,6 +9,10 @@ import com.cl.demo.requestobjects.PhoneNumberCreateRequest;
 import com.cl.demo.responseobjects.PhoneNumberCreateResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @RestController
 @RequestMapping("phoneNumber")
 
@@ -25,6 +29,18 @@ public class PhoneNumberController {
 
         PhoneNumber phoneNumber =
                 phoneNumberService.addPhoneNumber(request);
+
+        return PhoneNumberCreateResponse.convert(
+                phoneNumber
+        );
+    }
+    @GetMapping("/getById")
+    public PhoneNumberCreateResponse getPhoneNumberById(
+            @RequestParam String uuid
+    ) {
+
+        PhoneNumber phoneNumber =
+                phoneNumberService.getPhoneNumberById(uuid);
 
         return PhoneNumberCreateResponse.convert(
                 phoneNumber
