@@ -3,9 +3,9 @@ package com.cl.demo.services;
 import com.cl.demo.DemoApplication;
 import com.cl.demo.entities.PhoneNumber;
 import com.cl.demo.requestobjects.PhoneNumberCreateRequest;
-import org.springframework.stereotype.Service;
 import com.cl.demo.requestobjects.PhoneNumberUpdateRequest;
 import com.cl.demo.utils.HelperUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,9 +17,7 @@ public class PhoneNumberService {
     public PhoneNumber addPhoneNumber(
             PhoneNumberCreateRequest request
     ) {
-
-        if (request == null
-                || request.getPhoneNumber() == null) {
+        if (request == null || request.getPhoneNumber() == null) {
 
             return new PhoneNumber();
         }
@@ -135,6 +133,29 @@ public class PhoneNumberService {
         );
 
         return existingPhoneNumber;
+    }
+    public Boolean deleteById(String uuid) {
+
+        PhoneNumber phoneNumberToDelete =
+                getPhoneNumberById(uuid);
+
+        if (phoneNumberToDelete.getId() == null
+                || !Boolean.TRUE.equals(
+                phoneNumberToDelete.getIsActive()
+        )) {
+
+            return false;
+        }
+
+        phoneNumberToDelete.setIsActive(
+                Boolean.FALSE
+        );
+
+        phoneNumberToDelete.setUpdatedDate(
+                new Date()
+        );
+
+        return true;
     }
 
 }
