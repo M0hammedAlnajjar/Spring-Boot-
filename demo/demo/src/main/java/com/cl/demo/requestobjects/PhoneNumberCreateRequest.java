@@ -7,5 +7,5 @@ import lombok.Setter;
 
 public class PhoneNumberCreateRequest {
     private String CountryCode;
-    private long phoneNumber;
+    private Long phoneNumber;
 }
