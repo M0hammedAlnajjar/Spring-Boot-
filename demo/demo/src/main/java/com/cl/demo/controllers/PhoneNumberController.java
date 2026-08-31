@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+import com.cl.demo.entities.PhoneNumber;
+import com.cl.demo.responseobjects.PhoneNumberCreateResponse;
+
 @RestController
 @RequestMapping("phoneNumber")
 
@@ -44,6 +48,16 @@ public class PhoneNumberController {
 
         return PhoneNumberCreateResponse.convert(
                 phoneNumber
+        );
+    }
+    @GetMapping("/getAll")
+    public List<PhoneNumberCreateResponse> getAllPhoneNumbers() {
+
+        List<PhoneNumber> phoneNumbers =
+                phoneNumberService.getAllPhoneNumbers();
+
+        return PhoneNumberCreateResponse.convert(
+                phoneNumbers
         );
     }
 }
