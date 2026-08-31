@@ -17,6 +17,11 @@ import java.util.List;
 import com.cl.demo.entities.PhoneNumber;
 import com.cl.demo.responseobjects.PhoneNumberCreateResponse;
 
+
+import com.cl.demo.requestobjects.PhoneNumberUpdateRequest;
+import com.cl.demo.responseobjects.PhoneNumberUpdateResponse;
+import org.springframework.web.bind.annotation.PutMapping;
+
 @RestController
 @RequestMapping("phoneNumber")
 
@@ -58,6 +63,18 @@ public class PhoneNumberController {
 
         return PhoneNumberCreateResponse.convert(
                 phoneNumbers
+        );
+    }
+    @PutMapping("/update")
+    public PhoneNumberUpdateResponse updatePhoneNumber(
+            @RequestBody PhoneNumberUpdateRequest request
+    ) {
+
+        PhoneNumber phoneNumber =
+                phoneNumberService.updatePhoneNumber(request);
+
+        return PhoneNumberUpdateResponse.convert(
+                phoneNumber
         );
     }
 }
