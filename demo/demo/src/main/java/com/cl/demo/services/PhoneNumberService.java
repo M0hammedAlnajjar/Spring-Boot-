@@ -117,10 +117,19 @@ public class PhoneNumberService {
             return existingPhoneNumber;
         }
 
+        String countryCodeToUpdate =
+                request.getCountryCodeToUpdate();
+
+        if (countryCodeToUpdate != null
+                && countryCodeToUpdate.isBlank()) {
+
+            countryCodeToUpdate = null;
+        }
+
         existingPhoneNumber.setCountryCode(
                 HelperUtils.compare(
                         existingPhoneNumber.getCountryCode(),
-                        request.getCountryCodeToUpdate()
+                        countryCodeToUpdate
                 )
         );
 

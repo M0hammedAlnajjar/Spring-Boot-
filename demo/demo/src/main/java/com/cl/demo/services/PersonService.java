@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -220,6 +221,13 @@ public class PersonService {
             PersonUpdateRequest updateObj
     ) {
 
+        if (updateObj == null
+                || updateObj.getUuid() == null
+                || updateObj.getUuid().isBlank()) {
+
+            return new Person();
+        }
+
         Person person =
                 getPersonById(
                         updateObj.getUuid()
@@ -245,12 +253,36 @@ public class PersonService {
                 )
         );
 
-        person.setEmail(
+        String emailToUpdate =
+                updateObj.getEmailToUpdate();
+
+        if (emailToUpdate != null
+                && emailToUpdate.isBlank()) {
+
+            emailToUpdate = null;
+        }
+
+        String updatedEmail =
                 HelperUtils.compare(
                         person.getEmail(),
-                        updateObj.getEmailToUpdate()
-                )
-        );
+                        emailToUpdate
+                );
+
+        if (Objects.equals(updatedEmail, person.getEmail())
+                || (updatedEmail != null
+                && !DemoApplication.emails.contains(updatedEmail))) {
+
+            person.setEmail(
+                    updatedEmail
+            );
+
+            if (updatedEmail != null) {
+
+                DemoApplication.emails.add(
+                        updatedEmail
+                );
+            }
+        }
 
         person.setUpdatedDate(
                 new Date()

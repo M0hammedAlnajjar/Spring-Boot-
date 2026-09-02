@@ -146,10 +146,19 @@ public class TaskService {
             return existingTask;
         }
 
+        String titleToUpdate =
+                taskUpdateRequest.getTitleToUpdate();
+
+        if (titleToUpdate != null
+                && titleToUpdate.isBlank()) {
+
+            titleToUpdate = null;
+        }
+
         existingTask.setTitle(
                 HelperUtils.compare(
                         existingTask.getTitle(),
-                        taskUpdateRequest.getTitleToUpdate()
+                        titleToUpdate
                 )
         );
 
