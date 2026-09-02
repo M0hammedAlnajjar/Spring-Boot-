@@ -327,13 +327,23 @@ public class PersonService {
             PersonUpdateRequest updateRequest
     ) {
 
+        if (currentUserNameObj == null
+                || updateRequest == null
+                || updateRequest.getUserNameToUpdate() == null
+                || updateRequest.getUserNameToUpdate().isBlank()) {
+
+            return currentUserNameObj;
+        }
+
         String userNameToUpdate =
                 HelperUtils.compare(
                         currentUserNameObj.getActiveUserName(),
                         updateRequest.getUserNameToUpdate()
                 );
 
-        if (DemoApplication.userNames.add(
+        if (!userNameToUpdate.equals(
+                currentUserNameObj.getActiveUserName()
+        ) && !DemoApplication.userNames.contains(
                 userNameToUpdate
         )) {
 
@@ -346,15 +356,27 @@ public class PersonService {
                         new ArrayList<>();
             }
 
-            userNameHistory.add(
-                    currentUserNameObj.getActiveUserName()
-            );
+            if (currentUserNameObj.getActiveUserName() != null
+                    && !currentUserNameObj.getActiveUserName().isBlank()) {
+
+                userNameHistory.add(
+                        currentUserNameObj.getActiveUserName()
+                );
+            }
 
             currentUserNameObj.setPrevUserNames(
                     userNameHistory
             );
 
             currentUserNameObj.setActiveUserName(
+                    userNameToUpdate
+            );
+
+            currentUserNameObj.setUpdatedDate(
+                    new Date()
+            );
+
+            DemoApplication.userNames.add(
                     userNameToUpdate
             );
         }

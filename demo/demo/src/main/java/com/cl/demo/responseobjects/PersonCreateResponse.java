@@ -10,16 +10,20 @@ import java.util.List;
 @Getter
 @Setter
 public class PersonCreateResponse {
-    String personId;
-    String fullName;
-    String userName;
-    String email;
-    String phoneNumber;
+    private String personId;
+    private String fullName;
+    private String userName;
+    private String email;
+    private String phoneNumber;
 
     public static PersonCreateResponse convert(Person person) {
 
         PersonCreateResponse response =
                 new PersonCreateResponse();
+
+        if (person == null || person.getId() == null) {
+            return response;
+        }
 
         response.setPersonId(
                 person.getId().toString()
@@ -29,9 +33,12 @@ public class PersonCreateResponse {
                 person.getName()
         );
 
-        response.setUserName(
-                person.getUserName().getActiveUserName()
-        );
+        if (person.getUserName() != null) {
+
+            response.setUserName(
+                    person.getUserName().getActiveUserName()
+            );
+        }
 
         response.setEmail(
                 person.getEmail()
@@ -51,11 +58,15 @@ public class PersonCreateResponse {
 
     public static List<PersonCreateResponse> convert(List<Person> personList) {
         List<PersonCreateResponse> responseList = new ArrayList<>();
+
+        if (personList == null) {
+            return responseList;
+        }
+
         for (Person p : personList) {
             responseList.add(convert(p));
         }
         return responseList;
     }
 }
-
 
