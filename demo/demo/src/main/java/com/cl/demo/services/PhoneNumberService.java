@@ -17,7 +17,10 @@ public class PhoneNumberService {
     public PhoneNumber addPhoneNumber(
             PhoneNumberCreateRequest request
     ) {
-        if (request == null || request.getPhoneNumber() == null) {
+        if (request == null
+                || request.getCountryCode() == null
+                || request.getCountryCode().isBlank()
+                || request.getPhoneNumber() == null) {
 
             return new PhoneNumber();
         }

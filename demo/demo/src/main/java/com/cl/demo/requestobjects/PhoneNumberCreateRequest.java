@@ -6,6 +6,6 @@ import lombok.Setter;
 @Setter
 
 public class PhoneNumberCreateRequest {
-    private String CountryCode;
+    private String countryCode;
     private Long phoneNumber;
 }

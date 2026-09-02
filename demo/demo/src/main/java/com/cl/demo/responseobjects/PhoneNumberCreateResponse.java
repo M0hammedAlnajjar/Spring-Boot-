@@ -1,10 +1,14 @@
 package com.cl.demo.responseobjects;
 
 import com.cl.demo.entities.PhoneNumber;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class PhoneNumberCreateResponse {
 
     private String phoneNumberId;
@@ -24,14 +28,17 @@ public class PhoneNumberCreateResponse {
         PhoneNumberCreateResponse response =
                 new PhoneNumberCreateResponse();
 
-        response.phoneNumberId =
-                phoneNumberObj.getId().toString();
+        response.setPhoneNumberId(
+                phoneNumberObj.getId().toString()
+        );
 
-        response.countryCode =
-                phoneNumberObj.getCountryCode();
+        response.setCountryCode(
+                phoneNumberObj.getCountryCode()
+        );
 
-        response.phoneNumber =
-                phoneNumberObj.getPhoneNumber();
+        response.setPhoneNumber(
+                phoneNumberObj.getPhoneNumber()
+        );
 
         return response;
     }

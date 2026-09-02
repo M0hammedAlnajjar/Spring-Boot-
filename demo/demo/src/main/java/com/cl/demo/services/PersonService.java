@@ -50,6 +50,8 @@ public class PersonService {
                 || requestObj.getPersonUserName().isBlank()
                 || requestObj.getPersonEmail() == null
                 || requestObj.getPersonEmail().isBlank()
+                || requestObj.getPersonCountryCode() == null
+                || requestObj.getPersonCountryCode().isBlank()
                 || requestObj.getPersonPhoneNumber() == null) {
 
             response.put(
