@@ -18,10 +18,14 @@ public class TaskUpdateResponse {
     private Boolean isAssigned;
 
     public static TaskUpdateResponse convert(Task task) {
+
+        TaskUpdateResponse taskUpdateResponse =
+                new TaskUpdateResponse();
+
         if (task == null || task.getId() == null){
-        return null;
-    }
-        TaskUpdateResponse taskUpdateResponse = new TaskUpdateResponse();
+            return taskUpdateResponse;
+        }
+
         taskUpdateResponse.setTaskId(task.getId().toString());
         taskUpdateResponse.setTitle(task.getTitle());
         taskUpdateResponse.setDescription(task.getDescription());
@@ -34,9 +38,12 @@ public class TaskUpdateResponse {
         if (task.getDueDate() != null){
             taskUpdateResponse.setDueDate(task.getDueDate().toString());
         }
-        return taskUpdateResponse;
 
-}
+        taskUpdateResponse.setIsAssigned(task.getIsAssigned());
+
+        return taskUpdateResponse;
+    }
+
     public static List<TaskUpdateResponse> convert(
             List<Task> taskList
     ) {
@@ -44,13 +51,12 @@ public class TaskUpdateResponse {
         List<TaskUpdateResponse> responseList =
                 new ArrayList<>();
 
+        if (taskList == null) {
+            return responseList;
+        }
+
         for (Task task : taskList) {
-
-            TaskUpdateResponse response = convert(task);
-
-            if (response != null) {
-                responseList.add(response);
-            }
+            responseList.add(convert(task));
         }
 
         return responseList;

@@ -22,12 +22,12 @@ public class TaskCreateResponse {
     // Convert one Task
     public static TaskCreateResponse convert(Task task) {
 
-        if (task == null || task.getId() == null) {
-            return null;
-        }
-
         TaskCreateResponse response =
                 new TaskCreateResponse();
+
+        if (task == null || task.getId() == null) {
+            return response;
+        }
 
         response.setTaskId(task.getId().toString());
         response.setTitle(task.getTitle());
@@ -59,13 +59,12 @@ public class TaskCreateResponse {
         List<TaskCreateResponse> responses =
                 new ArrayList<>();
 
+        if (tasks == null) {
+            return responses;
+        }
+
         for (Task task : tasks) {
-
-            TaskCreateResponse response = convert(task);
-
-            if (response != null) {
-                responses.add(response);
-            }
+            responses.add(convert(task));
         }
 
         return responses;
