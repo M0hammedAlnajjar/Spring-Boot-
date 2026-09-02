@@ -27,6 +27,9 @@ public class PersonService {
     public static final String PERSON_SAVED =
             "Person saved";
 
+    public static final String PERSON_REQUIRED_FIELDS =
+            "Username, email, and phone number are required";
+
     @Autowired
     private PhoneNumberService phoneNumberService;
 
@@ -42,8 +45,20 @@ public class PersonService {
         Map<String, String> response =
                 new HashMap<>();
 
-        Person person =
-                new Person();
+        if (requestObj == null
+                || requestObj.getPersonUserName() == null
+                || requestObj.getPersonUserName().isBlank()
+                || requestObj.getPersonEmail() == null
+                || requestObj.getPersonEmail().isBlank()
+                || requestObj.getPersonPhoneNumber() == null) {
+
+            response.put(
+                    "error",
+                    PERSON_REQUIRED_FIELDS
+            );
+
+            return response;
+        }
 
         if (!verifyUserNameAndEmail(
                 requestObj.getPersonUserName(),
@@ -57,6 +72,9 @@ public class PersonService {
 
             return response;
         }
+
+        Person person =
+                new Person();
 
         // BaseClass information
         person.setId(
@@ -78,6 +96,18 @@ public class PersonService {
 
         UserName userName =
                 new UserName();
+
+        userName.setId(
+                UUID.randomUUID()
+        );
+
+        userName.setIsActive(
+                Boolean.TRUE
+        );
+
+        userName.setCreatedDate(
+                new Date()
+        );
 
         userName.setActiveUserName(
                 requestObj.getPersonUserName()
@@ -136,6 +166,14 @@ public class PersonService {
                 );
 
         if (result) {
+
+            DemoApplication.userNames.add(
+                    requestObj.getPersonUserName()
+            );
+
+            DemoApplication.emails.add(
+                    requestObj.getPersonEmail()
+            );
 
             response.put(
                     "response",
@@ -259,13 +297,8 @@ public class PersonService {
             String email
     ) {
 
-        if (!DemoApplication.emails.add(email)
-                || !DemoApplication.userNames.add(userName)) {
-
-            return false;
-        }
-
-        return true;
+        return !DemoApplication.emails.contains(email)
+                && !DemoApplication.userNames.contains(userName);
     }
 
 
